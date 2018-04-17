@@ -1,6 +1,4 @@
-#this will be the development phase
 from datetime import timedelta
-
 from airflow import DAG
 
 default_args = {
@@ -13,4 +11,4 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-dag = DAG('osa-av-workflow', default_args=default_args, schedule_interval=timedelta(1))
+dag = DAG('osa-av-workflow',description='Main DAG for the preservation workflow', default_args=default_args, schedule_interval=timedelta(1),catchup=False)
