@@ -96,3 +96,10 @@ set_environment_variables_local.sh
 airflow/airflow-webserver.pid
 airflow/unittests.cfg
 airflow/airflow.db
+
+# vscode ignore list
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
