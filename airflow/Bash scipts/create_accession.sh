@@ -13,6 +13,7 @@ function do_transcoding_to_mp4()
     for video_files in $video_directory_path/*
     do
         # perhaps we should copy the file into a local directory first
+
         # first extract the filename and the extension from the path that given && then after extract only the name of it
         local video_file_name=$(basename $video_files) && video_file_name="${video_file_name%.*}"
         local output_file_name=$video_file_name$file_extension
@@ -26,7 +27,7 @@ program_name=$(basename $0)
 # to access them use: ${args[0] ... and so on}
 if [ "$#" -ne 1 ]
 then
-    echo "Illegal number of parameters"    
+    echo "Illegal number of parameters"        
 else    
-    do_transcoding_to_mp4 $1
+    time do_transcoding_to_mp4 $1
 fi
