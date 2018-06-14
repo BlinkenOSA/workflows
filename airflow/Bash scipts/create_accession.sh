@@ -7,11 +7,12 @@
 #   ----------------------------------------------------------------
 function do_transcoding_to_mp4()
 {
-    file_extension="mp4"
     local video_directory_path=$1
+    local file_extension="mp4"
     for video_files in $video_directory_path/*
     do
-        echo $video_files
+        local video_file_name=$(basename $video_files)
+        echo $video_file_name
     done        
 }
 
