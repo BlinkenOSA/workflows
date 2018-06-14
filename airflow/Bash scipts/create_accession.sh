@@ -7,33 +7,21 @@
 #   ----------------------------------------------------------------
 function do_transcoding_to_mp4()
 {
-    local video_files_directory_path=$1
-    local temporary_file_location="/opt/MasterFiles/"
+    local video_files_directory_path=$1    
     local output_directory_path="/opt/AccessFiles/"
     local file_extension=".mp4"
     for video_file in $video_files_directory_path/*
-    do
-        # copy the file into a local directory first:
-        cp -v $video_file $temporary_file_location   
-
-        # extract the filename and the extension from the path that given:
-        local video_file_name=$(basename $video_file)
-        # construct the input file for ffmpeg:
-        local input_file=$temporary_file_location$video_file_name
-        # extract only the name of the file to the output file for ffmpeg:
-        video_file_name="${video_file_name%.*}"               
+    do        
+        # extract the filename and the extension from the path that given && then extract only the name of the file:
+        local video_file_name=$(basename $video_file) && video_file_name="${video_file_name%.*}"
+        # construct the output file for ffmpeg:
         local output_file=$video_file_name$file_extension
 
         # do the transcoding:
-        ffmpeg -hide_banner -i $input_file -c:v libx264 -crf 34 -movflags +faststart -c:a copy $output_directory_path$output_file        
-        # ffmpeg -hide_banner -i $video_file -c:v libx264 -pix_fmt yuv420p -crf 34 -c:a aac -strict -2 $output_directory_path$output_file
-
-        # after transcoding delete unnecessary files
-        rm $temporary_file_location*
+        ffmpeg -hide_banner -i $video_file -c:v libx264 -pix_fmt yuv420p -crf 34 -movflags +faststart -c:a aac -strict -2 $output_directory_path$output_file        
     done
 }
 
-program_name=$(basename $0)
 # for further development store the argument in an array like this:
 # args=("$@")
 # to access them use: ${args[0] ... and so on}
@@ -41,5 +29,5 @@ if [ "$#" -ne 1 ]
 then
     echo "Illegal number of parameters"        
 else    
-    time do_transcoding_to_mp4 $1
+    do_transcoding_to_mp4 $1
 fi
