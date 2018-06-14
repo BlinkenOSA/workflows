@@ -8,13 +8,19 @@
 function do_transcoding_to_mp4()
 {
     local video_directory_path=$1
-    echo "$video_directory_path in $program_name"   
+    for video_files in $video_directory_path/*
+    do
+        echo $video_files
+    done        
 }
 
 program_name=$(basename $0)
+# for further development store the argument in an array like this:
+# args=("$@")
+# to access them use: ${args[0] ... and so on}
 if [ "$#" -ne 1 ]
 then
-    echo "Illegal number of parameters"
-else
+    echo "Illegal number of parameters"    
+else    
     do_transcoding_to_mp4 $1
 fi
