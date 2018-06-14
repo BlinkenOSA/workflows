@@ -7,6 +7,7 @@
 #   ----------------------------------------------------------------
 function do_transcoding_to_mp4()
 {
+    file_extension="mp4"
     local video_directory_path=$1
     for video_files in $video_directory_path/*
     do
