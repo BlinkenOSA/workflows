@@ -11,7 +11,9 @@ function do_transcoding_to_mp4()
     local file_extension="mp4"
     for video_files in $video_directory_path/*
     do
-        local video_file_name=$(basename $video_files)
+        # perhaps we should copy the file into a local directory first
+        # first extract the filename and the extension from the path that given && then after extract only the name of it
+        local video_file_name=$(basename $video_files) && video_file_name="${video_file_name%.*}"
         echo $video_file_name
     done        
 }
