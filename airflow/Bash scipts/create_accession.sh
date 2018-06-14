@@ -17,8 +17,8 @@ function do_transcoding_to_mp4()
         # first extract the filename and the extension from the path that given && then after extract only the name of it
         local video_file_name=$(basename $video_file) && video_file_name="${video_file_name%.*}"
         local output_file_name=$video_file_name$file_extension
-        # ffmpeg -hide_banner -i 
-        echo $output_directory_path$output_file_name
+        ffmpeg -hide_banner -i $video_file -c:v libx264 -crf 34 -c:a copy $output_directory_path$output_file_name
+        # ffmpeg -hide_banner -i $video_file -c:v libx264 -pix_fmt yuv420p -crf 34 -c:a aac -strict -2 $output_directory_path$output_file_name        
     done
 }
 
