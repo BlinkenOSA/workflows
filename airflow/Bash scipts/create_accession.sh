@@ -8,6 +8,7 @@
 function do_transcoding_to_mp4()
 {
     local video_directory_path=$1
+    local output_directory_path="/opt/AccessFiles/"
     local file_extension=".mp4"
     for video_files in $video_directory_path/*
     do
@@ -15,7 +16,7 @@ function do_transcoding_to_mp4()
         # first extract the filename and the extension from the path that given && then after extract only the name of it
         local video_file_name=$(basename $video_files) && video_file_name="${video_file_name%.*}"
         local output_file_name=$video_file_name$file_extension
-        echo $output_file_name
+        echo $output_directory_path$output_file_name
     done
 }
 
