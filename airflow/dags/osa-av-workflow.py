@@ -3,7 +3,9 @@ from airflow.operators.python_operator import PythonOperator
 
 from airflow import DAG
 
-from python_tasks.collect_files import collect_files, create_directories, copy_master_files
+from python_tasks.collect_files import collect_files
+from python_tasks.create_directories import create_directories
+from python_tasks.copy_master_files import copy_master_files
 
 default_args = {
     'owner': 'airflow',
@@ -23,9 +25,8 @@ dag = DAG('osa-av-workflow',
           catchup=False)
 
 task_01 = PythonOperator(task_id='collect_files', python_callable=collect_files, dag=dag)
-
 task_02 = PythonOperator(task_id='create_directories', python_callable=create_directories, dag=dag)
-task_02.set_upstream(task_01)
-
 task_03 = PythonOperator(task_id='copy_master_files', python_callable=copy_master_files, dag=dag)
-task_03.set_upstream(task_02)
+
+task_01.set_downstream(task_02)
+task_02.set_downstream(task_03)

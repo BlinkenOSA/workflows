@@ -2,15 +2,14 @@ import os
 import json
 from shutil import copyfile
 
-# from config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST
-from python_tasks.config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST
+from .config import OUTPUT_DIR, VIDEO_LIST
 
 
 def main():
-    craete_directories()
+    copy_master_files()
 
 
-def craete_directories():
+def copy_master_files():
     if not os.path.exists(VIDEO_LIST):
         print("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
