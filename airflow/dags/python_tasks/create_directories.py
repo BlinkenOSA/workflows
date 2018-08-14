@@ -5,10 +5,6 @@ import pathlib
 from .config import OUTPUT_DIR, VIDEO_LIST
 
 
-def main():
-    create_directories()
-
-
 def create_directories():
     if not os.path.exists(VIDEO_LIST):
         print("Video list file '%s' doesn't exists" % VIDEO_LIST)
@@ -29,4 +25,4 @@ def create_directories():
         print("Directory '%s' was created" % barcode_dir)
 
 if __name__ == '__main__':
-    main()
+    create_directories()

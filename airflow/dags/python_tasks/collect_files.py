@@ -1,21 +1,22 @@
 import json
 
-from .config import INPUT_DIR, VIDEO_LIST
+import pathlib
+
+from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, FILE_EXTENSION
 from pathlib import Path
 
 
-def main():
-    collect_files()
-
-
 def collect_files():
+    print("Generate output directory %s" % OUTPUT_DIR)
+    pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+
     print("Collecting files from %s" % INPUT_DIR)
     file_list = {}
     barcode = ""
 
-    pathlist = Path(INPUT_DIR).glob('**/*.avi')
+    pathlist = Path(INPUT_DIR).glob('**/*.%s' % FILE_EXTENSION)
     for path in pathlist:
-        file_name = str(path.name).strip('.avi')
+        file_name = str(path.name).strip('.%s' % FILE_EXTENSION)
         if is_number(file_name):
             barcode = file_name
         else:
@@ -46,4 +47,4 @@ def is_number(s):
 
 
 if __name__ == '__main__':
-    main()
+    collect_files()
