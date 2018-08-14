@@ -6,6 +6,7 @@ from airflow import DAG
 from python_tasks.collect_files import collect_files
 from python_tasks.create_directories import create_directories
 from python_tasks.copy_master_files import copy_master_files
+from python_tasks.create_checksums import create_checksums
 
 default_args = {
     'owner': 'airflow',
@@ -27,6 +28,8 @@ dag = DAG('osa-av-workflow',
 task_01 = PythonOperator(task_id='collect_files', python_callable=collect_files, dag=dag)
 task_02 = PythonOperator(task_id='create_directories', python_callable=create_directories, dag=dag)
 task_03 = PythonOperator(task_id='copy_master_files', python_callable=copy_master_files, dag=dag)
+task_04 = PythonOperator(task_id='create_checksums', python_callable=create_checksums, dag=dag)
 
 task_01.set_downstream(task_02)
 task_02.set_downstream(task_03)
+task_03.set_downstream(task_04)
