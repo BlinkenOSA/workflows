@@ -1,5 +1,8 @@
 import os
 
-INPUT_DIR = '/Users/Josh/airflow/video/input'
-OUTPUT_DIR = '/Users/Josh/airflow/video/output'
+FILE_EXTENSION = 'avi'
+
+INPUT_DIR = '/video/input'
+OUTPUT_DIR = '/video/output'
+
 VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
