@@ -1,7 +1,6 @@
 import json
 
-# from config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST
-from python_tasks.config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST
+from .config import INPUT_DIR, VIDEO_LIST
 from pathlib import Path
 
 

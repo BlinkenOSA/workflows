@@ -2,15 +2,14 @@ import os
 import json
 import pathlib
 
-# from config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST
-from python_tasks.config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST
+from .config import OUTPUT_DIR, VIDEO_LIST
 
 
 def main():
-    craete_directories()
+    create_directories()
 
 
-def craete_directories():
+def create_directories():
     if not os.path.exists(VIDEO_LIST):
         print("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
