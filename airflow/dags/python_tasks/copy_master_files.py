@@ -1,6 +1,6 @@
 import os
 import json
-from shutil import copyfile
+from shutil import move
 
 from .config import OUTPUT_DIR, VIDEO_LIST, FILE_EXTENSION
 
@@ -19,7 +19,7 @@ def copy_master_files():
         master_file = os.path.join(master_dir, '%s.%s' % (barcode, FILE_EXTENSION))
 
         print("Start copying '%s'" % path)
-        copyfile(path, master_file)
+        move(path, master_file)
         print("Finished copying file to '%s'" % master_file)
 
 if __name__ == '__main__':

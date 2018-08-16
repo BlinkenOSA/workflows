@@ -15,19 +15,20 @@ def collect_files():
     barcode = ""
 
     pathlist = Path(INPUT_DIR).glob('**/*.%s' % FILE_EXTENSION)
-    for path in pathlist:
-        file_name = str(path.name).strip('.%s' % FILE_EXTENSION)
-        if is_number(file_name):
-            barcode = file_name
-        else:
-            parent_dir = path.parts[len(path.parts)-2]
-            if is_number(parent_dir):
-                barcode = parent_dir
+    path = next(pathlist)
 
-        if barcode == "":
-            print("No barcode can be found in %s" % str(path))
-        else:
-            file_list[barcode] = str(path)
+    file_name = str(path.name).strip('.%s' % FILE_EXTENSION)
+    if is_number(file_name):
+        barcode = file_name
+    else:
+        parent_dir = path.parts[len(path.parts)-2]
+        if is_number(parent_dir):
+            barcode = parent_dir
+
+    if barcode == "":
+        print("No barcode can be found in %s" % str(path))
+    else:
+        file_list[barcode] = str(path)
 
     if len(file_list) > 0:
         with open(VIDEO_LIST, 'w') as outfile:
