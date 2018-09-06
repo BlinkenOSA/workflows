@@ -14,8 +14,12 @@ def collect_files():
     file_list = {}
     barcode = ""
 
-    pathlist = Path(INPUT_DIR).glob('**/*.%s' % FILE_EXTENSION)
-    path = next(pathlist)
+    pathlist = list(Path(INPUT_DIR).glob('**/*.%s' % FILE_EXTENSION))
+    if len(pathlist) > 0:
+        path = pathlist[0]
+    else:
+        print("Directory doesn't contain files with extension: %s" % FILE_EXTENSION)
+        raise Exception
 
     file_name = str(path.name).strip('.%s' % FILE_EXTENSION)
     if is_number(file_name):
