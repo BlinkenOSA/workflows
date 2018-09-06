@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime
+from pathlib import Path
 
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.python_operator import PythonOperator
@@ -9,6 +10,9 @@ from python_tasks.collect_files import collect_files
 from python_tasks.create_directories import create_directories
 from python_tasks.copy_master_files import copy_master_files
 from python_tasks.create_checksums import create_checksums
+
+from python_tasks.config import INPUT_DIR, FILE_EXTENSION
+
 
 default_args = {
     'owner': 'airflow',
@@ -22,8 +26,12 @@ default_args = {
 }
 
 
-def retrigger(context, dag_run_obj):
-    return dag_run_obj
+def retrigger_dag(context, dag_run_obj):
+    pathlist = list(Path(INPUT_DIR).glob('**/*.%s' % FILE_EXTENSION))
+    if len(pathlist) > 0:
+        return dag_run_obj
+    else:
+        return None
 
 
 dag_id = 'osa-av-workflow'
@@ -37,7 +45,7 @@ task_01 = PythonOperator(task_id='collect_files', python_callable=collect_files,
 task_02 = PythonOperator(task_id='create_directories', python_callable=create_directories, dag=dag)
 task_03 = PythonOperator(task_id='copy_master_files', python_callable=copy_master_files, dag=dag)
 task_04 = PythonOperator(task_id='create_checksums', python_callable=create_checksums, dag=dag)
-task_05 = TriggerDagRunOperator(task_id='restart_dag', trigger_dag_id=dag_id, python_callable=retrigger, dag=dag)
+task_05 = TriggerDagRunOperator(task_id='restart_dag', trigger_dag_id=dag_id, python_callable=retrigger_dag, dag=dag)
 
 task_01.set_downstream(task_02)
 task_02.set_downstream(task_03)
