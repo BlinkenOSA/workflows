@@ -2,7 +2,7 @@ import os
 import json
 from shutil import move
 
-from .config import OUTPUT_DIR, VIDEO_LIST, FILE_EXTENSION
+from .config import OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION
 
 
 def copy_master_files():
@@ -16,7 +16,7 @@ def copy_master_files():
     for barcode, path in video_list.items():
         barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
         master_dir = os.path.join(barcode_dir, 'Content', 'Preservation')
-        master_file = os.path.join(master_dir, '%s.%s' % (barcode, FILE_EXTENSION))
+        master_file = os.path.join(master_dir, '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
 
         print("Start copying '%s'" % path)
         move(path, master_file)

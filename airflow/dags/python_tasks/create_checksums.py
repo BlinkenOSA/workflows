@@ -2,12 +2,12 @@ import os
 import json
 import hashlib
 
-from .config import OUTPUT_DIR, VIDEO_LIST, FILE_EXTENSION
+from .config import OUTPUT_DIR, VIDEO_LIST
 
 BLOCKSIZE = 65536
 
 
-def create_checksums():
+def create_checksums(directory='Preservation', file_extension='mp4'):
     if not os.path.exists(VIDEO_LIST):
         print("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
@@ -17,14 +17,14 @@ def create_checksums():
 
     for barcode, path in video_list.items():
         barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
-        master_dir = os.path.join(barcode_dir, 'Content', 'Preservation')
-        master_file = os.path.join(master_dir, '%s.%s' % (barcode, FILE_EXTENSION))
-        hash_dir = os.path.join(barcode_dir, 'Metadata', 'Preservation')
+        input_dir = os.path.join(barcode_dir, 'Content', directory)
+        input_file = os.path.join(input_dir, '%s.%s' % (barcode, file_extension))
+        hash_dir = os.path.join(barcode_dir, 'Metadata', directory)
 
         md5 = hashlib.md5()
         sha512 = hashlib.sha512()
 
-        with open(master_file, 'rb') as mf:
+        with open(input_file, 'rb') as mf:
             file_buffer = mf.read(BLOCKSIZE)
             while len(file_buffer) > 0:
                 md5.update(file_buffer)
