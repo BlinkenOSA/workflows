@@ -2,7 +2,7 @@ import json
 
 import pathlib
 
-from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, FILE_EXTENSION
+from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION
 from pathlib import Path
 
 
@@ -14,14 +14,14 @@ def collect_files():
     file_list = {}
     barcode = ""
 
-    pathlist = list(Path(INPUT_DIR).glob('**/*.%s' % FILE_EXTENSION))
+    pathlist = list(Path(INPUT_DIR).glob('**/*.%s' % MASTER_FILE_EXTENSION))
     if len(pathlist) > 0:
         path = pathlist[0]
     else:
-        print("Directory doesn't contain files with extension: %s" % FILE_EXTENSION)
+        print("Directory doesn't contain files with extension: %s" % MASTER_FILE_EXTENSION)
         raise Exception
 
-    file_name = str(path.name).strip('.%s' % FILE_EXTENSION)
+    file_name = str(path.name).strip('.%s' % MASTER_FILE_EXTENSION)
     if is_number(file_name):
         barcode = file_name
     else:
