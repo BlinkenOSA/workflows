@@ -25,7 +25,7 @@ def create_video_info(directory='Preservation', file_extension='mpg'):
         if p.returncode != 0:
             raise Error('ffprobe', out, err)
 
-        with open(os.path.join(metadata_dir, "metadata.json"), 'w') as metadata_file:
+        with open(os.path.join(metadata_dir, "%s_md_tech.json" % barcode), 'w') as metadata_file:
             metadata_file.write(out.decode('utf-8'))
 
 
