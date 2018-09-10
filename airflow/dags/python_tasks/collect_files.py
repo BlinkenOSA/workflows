@@ -1,16 +1,18 @@
 import json
-
+import logging
 import pathlib
 
 from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION
 from pathlib import Path
 
+log = logging.getLogger(__name__)
+
 
 def collect_files():
-    print("Generate output directory %s" % OUTPUT_DIR)
+    log.info("Generate output directory %s" % OUTPUT_DIR)
     pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
-    print("Collecting files from %s" % INPUT_DIR)
+    log.info("Collecting files from %s" % INPUT_DIR)
     file_list = {}
     barcode = ""
 
@@ -18,7 +20,7 @@ def collect_files():
     if len(pathlist) > 0:
         path = pathlist[0]
     else:
-        print("Directory doesn't contain files with extension: %s" % MASTER_FILE_EXTENSION)
+        log.error("Directory doesn't contain files with extension: %s" % MASTER_FILE_EXTENSION)
         raise Exception
 
     file_name = str(path.name).strip('.%s' % MASTER_FILE_EXTENSION)
@@ -30,16 +32,17 @@ def collect_files():
             barcode = parent_dir
 
     if barcode == "":
-        print("No barcode can be found in %s" % str(path))
+        log.error("No barcode can be found in %s" % str(path))
+        raise Exception
     else:
         file_list[barcode] = str(path)
 
     if len(file_list) > 0:
         with open(VIDEO_LIST, 'w') as outfile:
             json.dump(file_list, outfile)
-            print("List of video files were created in %s" % VIDEO_LIST)
+            log.info("List of video files were created in %s" % VIDEO_LIST)
     else:
-        print("No video can be found in %s" % INPUT_DIR)
+        log.error("No video can be found in %s" % INPUT_DIR)
         raise Exception
 
 

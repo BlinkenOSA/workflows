@@ -1,15 +1,18 @@
 import os
 import json
 import hashlib
+import logging
 
 from .config import OUTPUT_DIR, VIDEO_LIST
 
 BLOCKSIZE = 65536
 
+log = logging.getLogger(__name__)
+
 
 def create_checksums(directory='Preservation', file_extension='mp4'):
     if not os.path.exists(VIDEO_LIST):
-        print("Video list file '%s' doesn't exists" % VIDEO_LIST)
+        log.error("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
 
     with open(VIDEO_LIST, 'r') as video_list_file:

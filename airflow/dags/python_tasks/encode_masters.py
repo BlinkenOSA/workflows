@@ -1,8 +1,11 @@
 import json
 import os
 import ffmpeg
+import logging
 
 from .config import OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION, ACCESS_FILE_EXTENSION, FFMPEG_DIR
+
+log = logging.getLogger(__name__)
 
 
 def encode_masters(on_success=None, on_error=None):
@@ -36,7 +39,7 @@ def encode_masters(on_success=None, on_error=None):
             )
             return on_success
         except ffmpeg.Error as e:
-            print(e.stderr)
+            log.error(e.stderr)
             return on_error
 
 
