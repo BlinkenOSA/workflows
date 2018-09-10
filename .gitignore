@@ -94,7 +94,7 @@ ENV/
 airflow/logs/
 set_environment_variables_local.sh
 airflow/airflow-webserver.pid
-airflow/unittests.cfg
+# airflow/unittests.cfg
 airflow/airflow.db
 
 # vscode ignore list
