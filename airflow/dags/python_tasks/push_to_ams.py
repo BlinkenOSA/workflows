@@ -1,13 +1,16 @@
 import json
 import os
 import requests
+import logging
 
 from .config import OUTPUT_DIR, VIDEO_LIST, AMS_API, AMS_API_TOKEN
+
+log = logging.getLogger(__name__)
 
 
 def push_to_ams():
     if not os.path.exists(VIDEO_LIST):
-        print("Video list file '%s' doesn't exists" % VIDEO_LIST)
+        log.error("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
 
     with open(VIDEO_LIST, 'r') as video_list_file:
@@ -30,10 +33,10 @@ def push_to_ams():
 
         r = requests.put(url="%s%s/%s/" % (AMS_API, 'containers', barcode), data=data, headers=headers)
         if r.status_code == '200':
-            print("OK")
+            log.info("OK - Data ingested to AMS...")
         else:
-            print("Bad request to: %s" % r.url)
-            print("Response: %s - %s" % (r.status_code, r.reason))
+            log.error("Bad request to: %s" % r.url)
+            log.error("Response: %s - %s" % (r.status_code, r.reason))
 
 
 if __name__ == '__main__':
