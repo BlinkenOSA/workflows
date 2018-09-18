@@ -13,7 +13,7 @@ def encode_masters(on_success=None, on_error=None):
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
+        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         master_dir = os.path.join(barcode_dir, 'Content', 'Preservation')
         master_file = os.path.join(master_dir, '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
 
