@@ -3,6 +3,8 @@ import os
 import requests
 import logging
 
+from datetime import datetime
+
 from .config import OUTPUT_DIR, VIDEO_LIST, AMS_API, AMS_API_TOKEN
 
 log = logging.getLogger(__name__)
@@ -17,7 +19,7 @@ def push_to_ams():
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
+        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         metadata_dir = os.path.join(barcode_dir, 'Metadata', 'Preservation')
         metadata_file = os.path.join(metadata_dir, "%s_md_tech.json" % barcode)
 
@@ -28,7 +30,8 @@ def push_to_ams():
         data = {
             'barcode': barcode,
             'digital_version_exists': True,
-            'technical_metadata': technical_metadata
+            'digital_version_technical_metadata': technical_metadata,
+            'digital_version_creation_date': datetime.now()
         }
 
         r = requests.put(url="%s%s/%s/" % (AMS_API, 'containers', barcode), data=data, headers=headers)
