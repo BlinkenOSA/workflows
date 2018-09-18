@@ -19,7 +19,7 @@ def create_checksums(directory='Preservation', file_extension='mp4'):
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
+        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         input_dir = os.path.join(barcode_dir, 'Content', directory)
         input_file = os.path.join(input_dir, '%s.%s' % (barcode, file_extension))
         hash_dir = os.path.join(barcode_dir, 'Metadata', directory)
