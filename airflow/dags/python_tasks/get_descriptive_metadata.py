@@ -3,14 +3,12 @@ import os
 import requests
 import logging
 
-from datetime import datetime
-
 from .config import OUTPUT_DIR, VIDEO_LIST, AMS_API, AMS_API_TOKEN
 
 log = logging.getLogger(__name__)
 
 
-def push_to_ams():
+def get_descriptive_metadata():
     if not os.path.exists(VIDEO_LIST):
         log.error("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
@@ -21,26 +19,19 @@ def push_to_ams():
     for barcode, path in video_list.items():
         barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         metadata_dir = os.path.join(barcode_dir, 'Metadata', 'Preservation')
-        metadata_file = os.path.join(metadata_dir, "%s_md_tech.json" % barcode)
-
-        with open(metadata_file, 'r') as metadata:
-            technical_metadata = metadata.read()
+        metadata_file = os.path.join(metadata_dir, "%s_md_descriptive.json" % barcode)
 
         headers = {"Authorization": "Bearer %s" % AMS_API_TOKEN}
-        data = {
-            'barcode': barcode,
-            'digital_version_exists': True,
-            'digital_version_technical_metadata': technical_metadata,
-            'digital_version_creation_date': datetime.now()
-        }
+        r = requests.get(url="%s%s/%s/" % (AMS_API, 'containers/metadata', barcode), headers=headers)
 
-        r = requests.put(url="%s%s/%s/" % (AMS_API, 'containers', barcode), data=data, headers=headers)
-        if r.status_code == '200':
-            log.info("OK - Data ingested to AMS...")
+        if r.status_code == 200:
+            with open(metadata_file, 'w') as metadata:
+                metadata.write(json.dumps(r.json()['results']))
+                log.info("OK - Descriptive metadata collected...")
         else:
             log.error("Bad request to: %s" % r.url)
             log.error("Response: %s - %s" % (r.status_code, r.reason))
 
 
 if __name__ == '__main__':
-    push_to_ams()
+    get_descriptive_metadata()

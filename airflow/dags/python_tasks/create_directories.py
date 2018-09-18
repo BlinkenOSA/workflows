@@ -17,7 +17,7 @@ def create_directories():
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
+        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         pathlib.Path(barcode_dir).mkdir(parents=True, exist_ok=True)
 
         pathlib.Path(os.path.join(barcode_dir, 'Content', 'Preservation')).mkdir(parents=True, exist_ok=True)
