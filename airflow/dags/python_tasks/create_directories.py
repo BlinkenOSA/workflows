@@ -1,13 +1,16 @@
 import os
 import json
 import pathlib
+import logging
 
 from .config import OUTPUT_DIR, VIDEO_LIST
+
+log = logging.getLogger(__name__)
 
 
 def create_directories():
     if not os.path.exists(VIDEO_LIST):
-        print("Video list file '%s' doesn't exists" % VIDEO_LIST)
+        log.error("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
 
     with open(VIDEO_LIST, 'r') as video_list_file:
@@ -22,7 +25,7 @@ def create_directories():
         pathlib.Path(os.path.join(barcode_dir, 'Metadata', 'Preservation')).mkdir(parents=True, exist_ok=True)
         pathlib.Path(os.path.join(barcode_dir, 'Metadata', 'Access')).mkdir(parents=True, exist_ok=True)
 
-        print("Directory '%s' was created" % barcode_dir)
+        log.info("Directory '%s' was created" % barcode_dir)
 
 if __name__ == '__main__':
     create_directories()

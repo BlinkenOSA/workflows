@@ -14,6 +14,7 @@ from python_tasks.create_checksums import create_checksums
 from python_tasks.encode_masters import encode_masters
 from python_tasks.create_video_info import create_video_info
 from python_tasks.send_email import notify_email
+from python_tasks.push_to_ams import push_to_ams
 
 from python_tasks.config import INPUT_DIR, MASTER_FILE_EXTENSION, ACCESS_FILE_EXTENSION
 
@@ -39,11 +40,12 @@ def retrigger_dag(context, dag_run_obj):
 
 
 # DAG
-dag = DAG(dag_id='osa-av-workflow',
-          description='Main DAG for the preservation workflow',
-          default_args=default_args,
-          schedule_interval=None,
-          catchup=False)
+dag = DAG(
+    dag_id='osa-av-workflow',
+    description='Main DAG for the preservation workflow',
+    default_args=default_args,
+    schedule_interval=None,
+    catchup=False)
 
 # Tasks
 collect_files = PythonOperator(
@@ -79,6 +81,12 @@ create_master_info = PythonOperator(
         'file_extension': MASTER_FILE_EXTENSION
     })
 
+push_to_ams = PythonOperator(
+    task_id='push_to_ams',
+    python_callable=push_to_ams,
+    dag=dag
+    )
+    
 encode_masters = BranchPythonOperator(
     task_id='encode_masters',
     python_callable=encode_masters,
@@ -127,7 +135,8 @@ collect_files.set_downstream(create_directories)
 create_directories.set_downstream(copy_master_files)
 copy_master_files.set_downstream(create_master_checksums)
 create_master_checksums.set_downstream(create_master_info)
-create_master_info.set_downstream(encode_masters)
+create_master_info.set_downstream(push_to_ams)
+push_to_ams.set_downstream(encode_masters)
 encode_masters.set_downstream(create_access_checksums)
 create_access_checksums.set_downstream(create_access_info)
 create_access_info.set_downstream(send_info_mail)

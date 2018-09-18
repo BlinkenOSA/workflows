@@ -2,12 +2,16 @@ import json
 import os
 
 import subprocess
+import logging
+
 from .config import OUTPUT_DIR, VIDEO_LIST, FFMPEG_DIR
+
+log = logging.getLogger(__name__)
 
 
 def create_video_info(directory='Preservation', file_extension='mpg'):
     if not os.path.exists(VIDEO_LIST):
-        print("Video list file '%s' doesn't exists" % VIDEO_LIST)
+        log.error("Video list file '%s' doesn't exists" % VIDEO_LIST)
         raise Exception
 
     with open(VIDEO_LIST, 'r') as video_list_file:
@@ -23,9 +27,10 @@ def create_video_info(directory='Preservation', file_extension='mpg'):
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         if p.returncode != 0:
+            log.error(err)
             raise Error('ffprobe', out, err)
 
-        with open(os.path.join(metadata_dir, "metadata.json"), 'w') as metadata_file:
+        with open(os.path.join(metadata_dir, "%s_md_tech.json" % barcode), 'w') as metadata_file:
             metadata_file.write(out.decode('utf-8'))
 
 
