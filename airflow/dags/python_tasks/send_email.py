@@ -1,4 +1,6 @@
 from airflow.utils.email import send_email
+from .config import AIRFLOW_STAFF_EMAIL_LIST
+
 
 def notify_email(contextDict, **kwargs):
         
@@ -12,4 +14,4 @@ def notify_email(contextDict, **kwargs):
     AV workflow<br>
     """.format(**contextDict)
 
-    send_email('bonej@ceu.edu', email_title, email_body)
+    send_email(AIRFLOW_STAFF_EMAIL_LIST, email_title, email_body)

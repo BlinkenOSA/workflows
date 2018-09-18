@@ -118,16 +118,16 @@ break_dag = DummyOperator(
     task_id='break_dag',
     dag=dag)
 
-retrigger_dag = TriggerDagRunOperator(
-    task_id='restart_dag',
-    trigger_dag_id=dag_id,
-    python_callable=retrigger_dag,
-    dag=dag,
-    trigger_rule='one_success')
-
 send_info_mail = PythonOperator(
     task_id='send_info_mail',
     python_callable=notify_email,
+    dag=dag,
+    trigger_rule='one_success')
+
+retrigger_dag = TriggerDagRunOperator(
+    task_id='restart_dag',
+    trigger_dag_id='osa-av-workflow',
+    python_callable=retrigger_dag,
     dag=dag)
 
 # Flow
@@ -145,6 +145,5 @@ send_info_mail.set_downstream(retrigger_dag)
 # Error branch
 encode_masters.set_downstream(break_dag)
 break_dag.set_downstream(send_info_mail)
-send_info_mail.set_downstream(retrigger_dag)
 
 

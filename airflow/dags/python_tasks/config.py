@@ -14,3 +14,6 @@ AMS_API = 'http://ams.osaarchivum.org/api/'
 AMS_API_TOKEN = 'AMS_API_TOKEN'
 
 BARCODE_PATTERN = '^HU_OSA_[0-9]{8}$'
+
+AIRFLOW_STAFF_EMAIL_LIST = ['bonej@ceu.edu', 'danij@ceu.edu']
+AV_STAFF_EMAIL_LIST = ['bonej@ceu.edu', 'danij@ceu.edu']
