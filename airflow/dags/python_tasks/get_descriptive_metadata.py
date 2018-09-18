@@ -17,7 +17,7 @@ def get_descriptive_metadata():
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
+        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         metadata_dir = os.path.join(barcode_dir, 'Metadata', 'Preservation')
         metadata_file = os.path.join(metadata_dir, "%s_md_descriptive.json" % barcode)
 

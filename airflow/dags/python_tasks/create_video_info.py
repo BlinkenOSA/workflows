@@ -18,7 +18,7 @@ def create_video_info(directory='Preservation', file_extension='mpg'):
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, 'OSA-AIP_%s' % barcode)
+        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
         input_dir = os.path.join(barcode_dir, 'Content', directory)
         input_file = os.path.join(input_dir, '%s.%s' % (barcode, file_extension))
         metadata_dir = os.path.join(barcode_dir, 'Metadata', directory)

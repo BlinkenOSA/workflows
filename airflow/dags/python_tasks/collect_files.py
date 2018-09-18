@@ -2,7 +2,9 @@ import json
 import logging
 import pathlib
 
-from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION
+import re
+
+from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION, BARCODE_PATTERN
 from pathlib import Path
 
 log = logging.getLogger(__name__)
@@ -24,11 +26,11 @@ def collect_files():
         raise Exception
 
     file_name = str(path.name).strip('.%s' % MASTER_FILE_EXTENSION)
-    if is_number(file_name):
+    if re.match(BARCODE_PATTERN, file_name):
         barcode = file_name
     else:
         parent_dir = path.parts[len(path.parts)-2]
-        if is_number(parent_dir):
+        if re.match(BARCODE_PATTERN, parent_dir):
             barcode = parent_dir
 
     if barcode == "":
@@ -44,14 +46,6 @@ def collect_files():
     else:
         log.error("No video can be found in %s" % INPUT_DIR)
         raise Exception
-
-
-def is_number(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
 
 
 if __name__ == '__main__':
