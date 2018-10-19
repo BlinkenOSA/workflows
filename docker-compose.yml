@@ -1,0 +1,64 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+
+  ffmpeg:
+    image: nightseas/ffmpeg
+
+  portainer:
+    image: portainer/portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9000:9000"
+    volumes:
+      - portainer_data:/data
+
+  airflow:
+    image: blinkenosa/docker-airflow
+    privileged: true
+    restart: always
+    depends_on:
+      - postgres
+      - ffmpeg
+    command: webserver
+    volumes:
+      - ./airflow/dags:/usr/local/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Directory containing files as input
+      - /Volumes/DATA06/input_test:/opt/input
+      # Directory containing files as output
+      - /Volumes/DATA06/airflow_test:/opt/output
+    environment:
+      - LOAD_EX=n
+      - EXECUTOR=Local
+
+      # Airflow settings:
+      - AIRFLOW__SMTP__SMTP_HOST=localhost
+      - AIRFLOW__SMTP__SMTP_STARTTLS=false
+      - AIRFLOW__SMTP__SMTP_SSL=false
+      - AIRFLOW__SMTP__SMTP_PORT=25
+      - AIRFLOW__SMTP__SMTP_MAIL_FROM=no-reply@localhost
+
+      # AMS settings:
+      - AMS_API=http://ams.osaarchivum.org
+      - AMS_API_TOKEN=<token>
+
+      # Environment variables for the osa-av-workflow
+      - AV_FINAL_DIR=/Volumes/DATA06/airflow_test
+      - AV_MASTER_FILE_EXTENSION=mpg
+      - AV_ACCESS_FILE_EXTENSION=mp4
+      - AV_BARCODE_PATTERN=^HU_OSA_[0-9]{8}$$
+      - AV_STAFF_EMAIL_LIST=bonej@ceu.edu,danij@ceu.edu
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
