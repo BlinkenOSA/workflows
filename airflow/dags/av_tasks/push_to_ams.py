@@ -4,11 +4,18 @@ import requests
 import logging
 
 from datetime import datetime
+
+from airflow.models import Variable
 from airflow.utils.email import send_email
 
-from .config import OUTPUT_DIR, VIDEO_LIST, AMS_API, AMS_API_TOKEN, AV_STAFF_EMAIL_LIST
 
 log = logging.getLogger(__name__)
+
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
+AMS_API = os.environ.get("AMS_API", default_var='http://ams.osaarchivum.org/api/')
+AMS_API_TOKEN = os.environ.get("AMS_API_TOKEN", default_var='<api_token>')
+AV_STAFF_EMAIL_LIST = os.environ.get("AV_STAFF_EMAIL_LIST", default_var='')
 
 
 def push_to_ams():
@@ -48,10 +55,12 @@ def push_to_ams():
             Your sincerely,<br>
             AV workflow<br>
             """ % barcode
-            send_email(AV_STAFF_EMAIL_LIST, email_title, email_body)
+            emails = AV_STAFF_EMAIL_LIST.split(',')
+            send_email(emails, email_title, email_body)
         else:
             log.error("Bad request to: %s" % r.url)
             log.error("Response: %s - %s" % (r.status_code, r.reason))
+            raise Exception
 
 
 if __name__ == '__main__':

@@ -1,13 +1,18 @@
 import json
 import logging
+import os
 import pathlib
 
 import re
-
-from .config import INPUT_DIR, OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION, BARCODE_PATTERN
 from pathlib import Path
 
 log = logging.getLogger(__name__)
+
+INPUT_DIR = os.environ.get("AV_INPUT_DIR", default='/opt/input')
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
+MASTER_FILE_EXTENSION = os.environ.get("AV_MASTER_FILE_EXTENSION", default='avi')
+BARCODE_PATTERN = os.environ.get('AV_BARCODE_PATTERN', default='^HU_OSA_[0-9]{8}$')
 
 
 def collect_files():
@@ -50,3 +55,5 @@ def collect_files():
 
 if __name__ == '__main__':
     collect_files()
+
+
