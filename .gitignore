@@ -92,10 +92,12 @@ ENV/
 
 .idea/
 airflow/logs/
-set_environment_variables_local.sh
 airflow/airflow-webserver.pid
-# airflow/unittests.cfg
+airflow/unittests.cfg
 airflow/airflow.db
+airflow/airflow.cfg
+airflow/Bash scipts
+airflow/plugins
 
 # vscode ignore list
 .vscode/*
@@ -104,4 +106,4 @@ airflow/airflow.db
 !.vscode/launch.json
 !.vscode/extensions.json
 .vscode/settings.json
-.vscode/settings.json
+
