@@ -3,9 +3,14 @@ import os
 import requests
 import logging
 
-from .config import OUTPUT_DIR, VIDEO_LIST, AMS_API, AMS_API_TOKEN
+from airflow.models import Variable
 
 log = logging.getLogger(__name__)
+
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
+AMS_API = os.environ.get("AMS_API", default_var='http://ams.osaarchivum.org/api/')
+AMS_API_TOKEN = os.environ.get("AMS_API_TOKEN", default_var='<api_token>')
 
 
 def get_descriptive_metadata():

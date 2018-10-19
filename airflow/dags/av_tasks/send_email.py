@@ -1,5 +1,8 @@
+import os
 from airflow.utils.email import send_email
-from .config import AIRFLOW_STAFF_EMAIL_LIST
+
+
+AV_STAFF_EMAIL_LIST = os.environ.get('AV_STAFF_EMAIL_LIST', default=[])
 
 
 def notify_email(contextDict, **kwargs):
@@ -13,5 +16,5 @@ def notify_email(contextDict, **kwargs):
     Your sincerely,<br>
     AV workflow<br>
     """.format(**contextDict)
-
-    send_email(AIRFLOW_STAFF_EMAIL_LIST, email_title, email_body)
+    emails = AV_STAFF_EMAIL_LIST.split(',')
+    send_email(emails, email_title, email_body)

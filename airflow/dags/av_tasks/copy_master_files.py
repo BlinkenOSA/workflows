@@ -3,9 +3,13 @@ import json
 import logging
 from shutil import move
 
-from .config import OUTPUT_DIR, VIDEO_LIST, MASTER_FILE_EXTENSION
 
 log = logging.getLogger(__name__)
+
+
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
+MASTER_FILE_EXTENSION = os.environ.get("AV_MASTER_FILE_EXTENSION", default='avi')
 
 
 def copy_master_files():
@@ -21,9 +25,9 @@ def copy_master_files():
         master_dir = os.path.join(barcode_dir, 'Content', 'Preservation')
         master_file = os.path.join(master_dir, '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
 
-        log.info("Start copying '%s'" % path)
+        log.info("Start moving '%s'" % path)
         move(path, master_file)
-        log.info("Finished copying file to '%s'" % master_file)
+        log.info("Finished moving file to '%s'" % master_file)
 
 if __name__ == '__main__':
     copy_master_files()

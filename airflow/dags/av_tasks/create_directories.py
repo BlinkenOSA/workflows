@@ -3,9 +3,13 @@ import json
 import pathlib
 import logging
 
-from .config import OUTPUT_DIR, VIDEO_LIST
+from airflow.models import Variable
 
 log = logging.getLogger(__name__)
+
+
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
 
 
 def create_directories():

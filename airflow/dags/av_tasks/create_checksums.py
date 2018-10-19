@@ -3,11 +3,14 @@ import json
 import hashlib
 import logging
 
-from .config import OUTPUT_DIR, VIDEO_LIST
+from airflow.models import Variable
 
 BLOCKSIZE = 65536
 
 log = logging.getLogger(__name__)
+
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
 
 
 def create_checksums(directory='Preservation', file_extension='mp4'):
