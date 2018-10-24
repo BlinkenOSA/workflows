@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 services:
   postgres:
     image: postgres:9.6
@@ -12,13 +12,17 @@ services:
 
   portainer:
     image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer_data:/data
     ports:
       - "9000:9000"
-    volumes:
-      - portainer_data:/data
-
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role == manager]
+        
   airflow:
     image: blinkenosa/docker-airflow
     privileged: true
