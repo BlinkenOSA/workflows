@@ -23,16 +23,13 @@ def encode_masters(on_success=None, on_error=None):
         video_list = json.load(video_list_file)
 
     for barcode, path in video_list.items():
-        barcode_dir = os.path.join(OUTPUT_DIR, barcode)
-        master_dir = os.path.join(barcode_dir, 'Content', 'Preservation')
-        access_dir = os.path.join(barcode_dir, 'Content', 'Access')
         docker_dir = '/root/data'
 
-        input_file = os.path.join(master_dir, '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
-        output_file = os.path.join(access_dir, '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
-
         volumes = {}
-        volumes[WORKING_DIR] = {'bind': docker_dir, 'mode': 'rw'}
+        volumes[os.path.join(WORKING_DIR, barcode)] = {'bind': docker_dir, 'mode': 'rw'}
+
+        input_file = os.path.join(docker_dir, 'Content', 'Preservation', '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
+        output_file = os.path.join(docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
 
         # Set FFMPEG params
         command = ['ffmpeg', '-hwaccel', 'cuvid', '-c:v', 'h264_cuvid', '-i', input_file, '-c:v', 'h264_nvenc', output_file]
