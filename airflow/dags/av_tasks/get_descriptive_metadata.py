@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
 VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
+
 AMS_API = os.environ.get("AMS_API", default='http://ams.osaarchivum.org/api/')
 AMS_API_TOKEN = os.environ.get("AMS_API_TOKEN", default='<api_token>')
 
@@ -27,7 +28,9 @@ def get_descriptive_metadata():
         metadata_file = os.path.join(metadata_dir, "%s_md_descriptive.json" % barcode)
 
         headers = {"Authorization": "Bearer %s" % AMS_API_TOKEN}
-        r = requests.get(url="%s%s/%s/" % (AMS_API, 'containers/metadata', barcode), headers=headers)
+        url = "%s/%s/%s/" % (AMS_API, 'containers/metadata', barcode)
+        log.info("Trying to fetch metadata from: %s" % url)
+        r = requests.get(url=url, headers=headers)
 
         if r.status_code == 200:
             with open(metadata_file, 'w') as metadata:
