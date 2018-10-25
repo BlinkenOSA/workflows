@@ -35,7 +35,7 @@ def encode_masters(on_success=None, on_error=None):
         volumes[WORKING_DIR] = {'bind': docker_dir, 'mode': 'rw'}
 
         # Set FFMPEG params
-        command = ['ffmpeg', '-hwacce', 'cuvid', '-c:v', 'h264_cuvid', '-i', input_file, '-c:v', 'h264_nvenc', output_file]
+        command = ['ffmpeg', '-hwaccel', 'cuvid', '-c:v', 'h264_cuvid', '-i', input_file, '-c:v', 'h264_nvenc', output_file]
 
         # Run ffmpeg in docker container
         try:
