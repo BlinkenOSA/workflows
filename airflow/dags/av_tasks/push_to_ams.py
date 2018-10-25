@@ -41,8 +41,9 @@ def push_to_ams():
             'digital_version_technical_metadata': technical_metadata,
             'digital_version_creation_date': datetime.now()
         }
-
-        r = requests.put(url="%s%s/%s/" % (AMS_API, 'containers', barcode), data=data, headers=headers)
+        url = "%s/%s/%s/" % (AMS_API, 'containers', barcode)
+        log.info("Pushing metadata through %s" % url)
+        r = requests.put(url=url, data=data, headers=headers)
         if r.status_code == 200:
             log.info("OK - Data ingested to AMS...")
         elif r.status_code == 404:
