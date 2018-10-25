@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-from shutil import move
+import shutil
 
 
 log = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ def copy_master_files():
         master_file = os.path.join(master_dir, '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
 
         log.info("Start moving '%s'" % path)
-        move(path, master_file)
+        shutil.move(path, master_file)
         log.info("Finished moving file to '%s'" % master_file)
 
 if __name__ == '__main__':
