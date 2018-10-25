@@ -4,8 +4,6 @@ import requests
 import logging
 
 from datetime import datetime
-
-from airflow.models import Variable
 from airflow.utils.email import send_email
 
 
