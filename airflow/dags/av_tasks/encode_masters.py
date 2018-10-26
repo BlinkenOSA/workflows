@@ -47,6 +47,7 @@ def encode_masters(on_success=None, on_error=None):
             client.containers.run(
                 image="nightseas/ffmpeg",
                 command=" ".join(command),
+                runtime="nvidia",
                 volumes=volumes
             )
             return on_success
