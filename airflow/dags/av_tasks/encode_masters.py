@@ -33,13 +33,14 @@ def encode_masters(on_success=None, on_error=None):
 
         # Set FFMPEG params
         command = ['ffmpeg',
-                   '-hwaccel', 'cuvid',
                    '-i', input_file,
                    '-c:v', 'h264_nvenc',
                    '-pix_fmt', 'yuv420p',
                    '-b:v', '7.5M',
                    '-maxrate', '8M',
                    output_file]
+
+        log.info("Running command '%s'" % " ".join(command))
 
         # Run ffmpeg in docker container
         try:
