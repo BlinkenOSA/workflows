@@ -38,7 +38,7 @@ def encode_masters(on_success=None, on_error=None):
                    '-c:v', 'h264_nvenc',
                    '-pix_fmt', 'yuv420p',
                    '-b:v', '7.5M',
-                   '--maxrate', '8M',
+                   '-maxrate', '8M',
                    output_file]
 
         # Run ffmpeg in docker container
