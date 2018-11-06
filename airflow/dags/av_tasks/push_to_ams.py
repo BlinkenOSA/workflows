@@ -37,7 +37,7 @@ def push_to_ams():
             'barcode': barcode,
             'digital_version_exists': True,
             'digital_version_technical_metadata': technical_metadata,
-            'digital_version_creation_date': datetime.now()
+            'digital_version_creation_date': datetime.now().strftime('%Y-%m-%d')
         }
         url = "%s/%s/%s/" % (AMS_API, 'containers', barcode)
         log.info("Pushing metadata through %s" % url)
@@ -59,6 +59,7 @@ def push_to_ams():
         else:
             log.error("Bad request to: %s" % r.url)
             log.error("Response: %s - %s" % (r.status_code, r.reason))
+            log.error("Error message: %s" % r.content)
             raise Exception
 
 
