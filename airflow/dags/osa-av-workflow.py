@@ -158,5 +158,3 @@ send_info_mail.set_downstream(retrigger_dag)
 # Error branch
 encode_masters.set_downstream(break_dag)
 break_dag.set_downstream(send_info_mail)
-
-
