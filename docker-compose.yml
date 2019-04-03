@@ -18,10 +18,6 @@ services:
       - /opt/portainer_data:/data
     ports:
       - "9000:9000"
-    deploy:
-      mode: global
-      placement:
-        constraints: [node.role == manager]
         
   airflow:
     image: blinkenosa/docker-airflow
@@ -35,27 +31,27 @@ services:
       - ./airflow/dags:/usr/local/airflow/dags
       - /var/run/docker.sock:/var/run/docker.sock
       # Directory containing files as input
-      - /Volumes/DATA06/input_test:/opt/input
-      # Directory containing files as output
-      - /Volumes/DATA06/airflow_test:/opt/output
+      - /opt/av_hdd:/opt/av_hdd
     environment:
       - LOAD_EX=n
       - EXECUTOR=Local
 
       # Airflow settings:
-      - AIRFLOW__SMTP__SMTP_HOST=localhost
-      - AIRFLOW__SMTP__SMTP_STARTTLS=false
-      - AIRFLOW__SMTP__SMTP_SSL=false
+      - AIRFLOW__SMTP__SMTP_HOST=smtp.ceu.edu
+      - AIRFLOW__SMTP__SMTP_STARTTLS=False
+      - AIRFLOW__SMTP__SMTP_SSL=False
       - AIRFLOW__SMTP__SMTP_PORT=25
-      - AIRFLOW__SMTP__SMTP_MAIL_FROM=no-reply@localhost
+      - AIRFLOW__SMTP__SMTP_MAIL_FROM=OSA.Workflow@ceu.edu
 
       # AMS settings:
-      - AMS_API=http://ams.osaarchivum.org
-      - AMS_API_TOKEN=<token>
+      - AMS_API=http://ams.osaarchivum.org/api
+      - AMS_API_TOKEN=b3b519040de19c8b5fdc66e319a77ccd779c95a0
 
       # Environment variables for the osa-av-workflow
-      - AV_FINAL_DIR=/Volumes/DATA06/airflow_test
-      - AV_MASTER_FILE_EXTENSION=mpg
+      - AV_INPUT_DIR=/opt/av_hdd/videos
+      - AV_OUTPUT_DIR=/opt/av_hdd/aip
+      - AV_FINAL_DIR=/opt/av_hdd/aip
+      - AV_MASTER_FILE_EXTENSION=avi
       - AV_ACCESS_FILE_EXTENSION=mp4
       - AV_BARCODE_PATTERN=^HU_OSA_[0-9]{8}$$
       - AV_STAFF_EMAIL_LIST=bonej@ceu.edu,danij@ceu.edu
