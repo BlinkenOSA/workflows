@@ -33,6 +33,7 @@ def create_video_info(directory='Preservation', file_extension='mpg'):
         volumes = {}
         volumes[os.path.join(WORKING_DIR, barcode)] = {'bind': docker_dir, 'mode': 'rw'}
 
+        log.info(WORKING_DIR)
         log.info("Starting ffmpeg docker, mapping %s as %s" % (os.path.join(WORKING_DIR, barcode), docker_dir))
 
         input_dir = os.path.join(docker_dir, 'Content', directory)
