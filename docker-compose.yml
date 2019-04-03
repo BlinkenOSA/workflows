@@ -30,7 +30,7 @@ services:
     volumes:
       - ./airflow/dags:/usr/local/airflow/dags
       - /var/run/docker.sock:/var/run/docker.sock
-      # Directory containing files as input
+      # Directory containing files as input on server:
       - /opt/av_hdd:/opt/av_hdd
     environment:
       - LOAD_EX=n
