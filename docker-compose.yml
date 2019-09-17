@@ -51,7 +51,7 @@ services:
       - AV_INPUT_DIR=/opt/av_hdd/iso
       - AV_OUTPUT_DIR=/opt/av_hdd/aip
       - AV_FINAL_DIR=/opt/av_hdd/aip
-      - AV_MASTER_FILE_EXTENSION=avi
+      - AV_MASTER_FILE_EXTENSION=iso
       - AV_ACCESS_FILE_EXTENSION=mp4
       - AV_BARCODE_PATTERN=^HU_OSA_[0-9]{8}$$
       - AV_STAFF_EMAIL_LIST=bonej@ceu.edu,danij@ceu.edu
