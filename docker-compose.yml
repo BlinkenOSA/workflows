@@ -48,7 +48,7 @@ services:
       - AMS_API_TOKEN=b3b519040de19c8b5fdc66e319a77ccd779c95a0
 
       # Environment variables for the osa-av-workflow
-      - AV_INPUT_DIR=/opt/av_hdd/videos
+      - AV_INPUT_DIR=/opt/av_hdd/iso
       - AV_OUTPUT_DIR=/opt/av_hdd/aip
       - AV_FINAL_DIR=/opt/av_hdd/aip
       - AV_MASTER_FILE_EXTENSION=avi
