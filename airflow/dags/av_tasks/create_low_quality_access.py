@@ -11,7 +11,7 @@ ACCESS_FILE_EXTENSION = os.environ.get("AV_ACCESS_FILE_EXTENSION", default='mp4'
 WORKING_DIR = os.environ.get("AV_FINAL_DIR", default="/opt/output")
 
 
-def create_low_quality(on_success=None, on_error=None):
+def create_low_quality():
     client = docker.from_env()
 
     if not os.path.exists(VIDEO_LIST):
@@ -51,10 +51,8 @@ def create_low_quality(on_success=None, on_error=None):
                 runtime="nvidia",
                 volumes=volumes
             )
-            return on_success
         except docker.errors.ContainerError as e:
             log.error(e.stderr)
-            return on_error
 
 if __name__ == '__main__':
     create_low_quality()
