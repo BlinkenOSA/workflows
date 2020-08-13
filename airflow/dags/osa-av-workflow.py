@@ -13,6 +13,7 @@ from av_tasks.create_directories import create_directories
 from av_tasks.copy_master_files import copy_master_files
 from av_tasks.create_checksums import create_checksums
 from av_tasks.encode_masters import encode_masters
+from av_tasks.create_low_quality_access import create_low_quality
 from av_tasks.create_video_info import create_video_info
 from av_tasks.send_email import notify_email
 from av_tasks.get_descriptive_metadata import get_descriptive_metadata
@@ -27,7 +28,7 @@ ACCESS_FILE_EXTENSION = os.environ.get("AV_ACCESS_FILE_EXTENSION")
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2018, 1, 1),
+    'start_date': datetime(2020, 1, 1),
     'email': ['bonej@ceu.edu', 'danij@ceu.edu'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -107,6 +108,12 @@ encode_masters = BranchPythonOperator(
         'on_success': 'create_access_checksums',
         'on_error': 'break_dag'
     })
+
+create_low_quality_access_copy = PythonOperator(
+    task_id='create_low_access',
+    python_callable=create_low_quality,
+    dag=osa_av_workflow
+    )
 
 create_access_checksums = PythonOperator(
     task_id='create_access_checksums',
