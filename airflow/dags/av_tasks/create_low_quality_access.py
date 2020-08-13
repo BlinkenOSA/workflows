@@ -27,8 +27,8 @@ def create_low_quality(on_success=None, on_error=None):
         volumes = {}
         volumes[os.path.join(WORKING_DIR, barcode)] = {'bind': docker_dir, 'mode': 'rw'}
 
-        input_file = os.path.join(docker_dir, 'Content', 'Preservation', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
-        output_file = os.path.join(docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
+        input_file = os.path.join(docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
+        output_file = os.path.join(docker_dir, 'Content', 'Access', '%s-low.%s' % (barcode, ACCESS_FILE_EXTENSION))
 
         # Set FFMPEG params
         command = ['ffmpeg',
