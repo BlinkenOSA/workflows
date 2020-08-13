@@ -159,7 +159,8 @@ get_descriptive_metadata.set_downstream(push_to_ams)
 push_to_ams.set_downstream(encode_masters)
 encode_masters.set_downstream(create_access_checksums)
 create_access_checksums.set_downstream(create_access_info)
-create_access_info.set_downstream(send_info_mail)
+create_access_info.set_downstream(create_low_quality_access_copy)
+create_low_quality_access_copy.set_downstream(send_info_mail)
 send_info_mail.set_downstream(retrigger_dag)
 
 # Error branch
