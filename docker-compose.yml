@@ -44,7 +44,7 @@ services:
       - AIRFLOW__SMTP__SMTP_MAIL_FROM=OSA.Workflow@ceu.edu
 
       # AMS settings:
-      - AMS_API=http://ams.osaarchivum.org/api
+      - AMS_API=https://ams.osaarchivum.org/api
       - AMS_API_TOKEN=b3b519040de19c8b5fdc66e319a77ccd779c95a0
 
       # Environment variables for the osa-av-workflow
