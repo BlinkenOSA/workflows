@@ -21,7 +21,7 @@ def create_low_quality():
     with open(VIDEO_LIST, 'r') as video_list_file:
         video_list = json.load(video_list_file)
 
-    for barcode in video_list.items():
+    for barcode,path in video_list.items():
         docker_dir = '/root/data'
 
         volumes = {}
