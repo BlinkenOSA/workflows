@@ -27,7 +27,6 @@ def create_directories():
         pathlib.Path(os.path.join(barcode_dir, 'Content', 'Preservation')).mkdir(parents=True, exist_ok=True)
         pathlib.Path(os.path.join(barcode_dir, 'Content', 'Access')).mkdir(parents=True, exist_ok=True)
         pathlib.Path(os.path.join(barcode_dir, 'Metadata', 'Preservation')).mkdir(parents=True, exist_ok=True)
-        pathlib.Path(os.path.join(barcode_dir, 'Metadata', 'Access')).mkdir(parents=True, exist_ok=True)
 
         log.info("Directory '%s' was created" % barcode_dir)
 
