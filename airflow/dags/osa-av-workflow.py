@@ -29,7 +29,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2020, 1, 1),
-    'email': ['bonej@ceu.edu', 'danij@ceu.edu'],
+    'email': ['bonej@ceu.edu', 'danij@ceu.edu', 'krolikowskid@ceu.edu'],
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
