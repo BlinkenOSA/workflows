@@ -105,7 +105,7 @@ encode_masters = BranchPythonOperator(
     python_callable=encode_masters,
     dag=osa_av_workflow,
     op_kwargs={
-        'on_success': 'create_access_checksums',
+        'on_success': 'create_low_access',
         'on_error': 'break_dag'
     })
 
