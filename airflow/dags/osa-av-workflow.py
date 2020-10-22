@@ -115,24 +115,6 @@ create_low_quality_access_copy = PythonOperator(
     dag=osa_av_workflow
     )
 
-create_access_checksums = PythonOperator(
-    task_id='create_access_checksums',
-    python_callable=create_checksums,
-    dag=osa_av_workflow,
-    op_kwargs={
-        'directory': 'Access',
-        'file_extension': ACCESS_FILE_EXTENSION
-    })
-
-create_access_info = PythonOperator(
-    task_id='create_access_info',
-    python_callable=create_video_info,
-    dag=osa_av_workflow,
-    op_kwargs={
-        'directory': 'Access',
-        'file_extension': ACCESS_FILE_EXTENSION
-    })
-
 break_dag = DummyOperator(
     task_id='break_dag',
     dag=osa_av_workflow)
@@ -157,9 +139,7 @@ create_master_checksums.set_downstream(create_master_info)
 create_master_info.set_downstream(get_descriptive_metadata)
 get_descriptive_metadata.set_downstream(push_to_ams)
 push_to_ams.set_downstream(encode_masters)
-encode_masters.set_downstream(create_access_checksums)
-create_access_checksums.set_downstream(create_access_info)
-create_access_info.set_downstream(create_low_quality_access_copy)
+encode_masters.set_downstream(create_low_quality_access_copy)
 create_low_quality_access_copy.set_downstream(send_info_mail)
 send_info_mail.set_downstream(retrigger_dag)
 
