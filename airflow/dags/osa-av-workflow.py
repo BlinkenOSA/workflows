@@ -31,8 +31,8 @@ default_args = {
     'start_date': datetime(2020, 1, 1),
     'email': ['bonej@ceu.edu', 'danij@ceu.edu', 'krolikowskid@ceu.edu'],
     'email_on_failure': True,
-    'email_on_retry': False,
-    'retries': 1,
+    'email_on_retry': True,
+    'retries': 3,
     'retry_delay': timedelta(minutes=5)
 }
 
@@ -104,6 +104,7 @@ encode_masters = BranchPythonOperator(
     task_id='encode_masters',
     python_callable=encode_masters,
     dag=osa_av_workflow,
+    retries=3,
     op_kwargs={
         'on_success': 'create_low_access',
         'on_error': 'break_dag'
