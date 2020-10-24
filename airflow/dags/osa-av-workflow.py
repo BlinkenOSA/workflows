@@ -104,7 +104,7 @@ encode_masters = BranchPythonOperator(
     task_id='encode_masters',
     python_callable=encode_masters,
     dag=osa_av_workflow,
-    retries=3,
+    retries=5,
     op_kwargs={
         'on_success': 'create_low_access',
         'on_error': 'break_dag'
@@ -113,7 +113,8 @@ encode_masters = BranchPythonOperator(
 create_low_quality_access_copy = PythonOperator(
     task_id='create_low_access',
     python_callable=create_low_quality,
-    dag=osa_av_workflow
+    dag=osa_av_workflow,
+    retries=5
     )
 
 break_dag = DummyOperator(
