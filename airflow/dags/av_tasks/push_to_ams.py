@@ -41,7 +41,7 @@ def push_to_ams():
         }
         url = "%s/%s/%s/" % (AMS_API, 'containers', barcode)
         log.info("Pushing metadata through %s" % url)
-        r = requests.put(url=url, data=data, headers=headers)
+        r = requests.put(url=url, data=data, headers=headers, allow_redirects=True)
         if r.status_code == 200:
             log.info("OK - Data ingested to AMS...")
         elif r.status_code == 404:
