@@ -33,6 +33,7 @@ def encode_masters(on_success=None, on_error=None):
 
         # Set FFMPEG params
         command = ['ffmpeg',
+                   '-hide_banner',
                    '-i', input_file,
                    '-c:v', 'h264_nvenc',
                    '-pix_fmt', 'yuv420p',
