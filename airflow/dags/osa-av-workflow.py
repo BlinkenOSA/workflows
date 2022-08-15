@@ -53,6 +53,12 @@ osa_av_workflow = DAG(
     schedule_interval=None,
     catchup=False)
 
+wav_workflow = DAG(
+    dag_id='wav-workflow',
+    description='Transcodes preservation wav audio formats into mp3 archival access audio format',
+    default_args=default_args,
+    schedule_interval=None,
+    catchup=False)
 
 # Tasks
 collect_files = PythonOperator(
