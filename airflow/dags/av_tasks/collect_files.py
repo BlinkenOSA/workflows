@@ -11,8 +11,10 @@ log = logging.getLogger(__name__)
 INPUT_DIR = os.environ.get("AV_INPUT_DIR", default='/opt/input')
 OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
 VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
-MASTER_FILE_EXTENSION = os.environ.get("AV_MASTER_FILE_EXTENSION", default='avi')
-BARCODE_PATTERN = os.environ.get('AV_BARCODE_PATTERN', default='^HU_OSA_[0-9]{8}$')
+MASTER_FILE_EXTENSION = os.environ.get(
+    "AV_MASTER_FILE_EXTENSION", default='avi')
+BARCODE_PATTERN = os.environ.get(
+    'AV_BARCODE_PATTERN', default='^HU_OSA_[0-9]{8}$')
 
 
 def collect_files():
@@ -27,7 +29,8 @@ def collect_files():
     if len(pathlist) > 0:
         path = pathlist[0]
     else:
-        log.error("Directory doesn't contain files with extension: %s" % MASTER_FILE_EXTENSION)
+        log.error("Directory doesn't contain files with extension: %s" %
+                  MASTER_FILE_EXTENSION)
         raise Exception
 
     file_name = str(path.name).strip('.%s' % MASTER_FILE_EXTENSION)
@@ -55,5 +58,3 @@ def collect_files():
 
 if __name__ == '__main__':
     collect_files()
-
-
