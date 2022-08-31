@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from airflow.operators.python_operator import PythonOperator
 from airflow import DAG
 
-from av_tasks.collect_files import collect_files
+from av_tasks.audio.collect_audio_files import collect_files
 from av_tasks.create_directories import create_directories
 
 default_args = {
