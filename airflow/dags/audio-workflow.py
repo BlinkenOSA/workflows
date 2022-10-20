@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
-
 from airflow.operators.python_operator import PythonOperator
 from airflow import DAG
 
 from av_tasks.audio.collect_audio_files import collect_audio_files
+from av_tasks.audio.check_barcode_existence import check_barcode
 
 
 default_args = {
@@ -27,11 +27,19 @@ audio_workflow = DAG(
 )
 
 # Tasks
+# TODO: Tasks should depend on each other
+# especially the barcode checker; if it fails, stop the flow
 collect_audio_files = PythonOperator(
     task_id='collect_audio_files',
     python_callable=collect_audio_files,
     dag=audio_workflow
 )
 
+check_barcode_existence = PythonOperator(
+    task_id='check_barcode_existence',
+    python_callable=check_barcode,
+    dag=audio_workflow
+)
+
 # Flow
-collect_audio_files
+collect_audio_files.set_downstream(check_barcode_existence)
