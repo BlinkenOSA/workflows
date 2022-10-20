@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from airflow.operators.python_operator import PythonOperator
 from airflow import DAG
 
-from av_tasks.audio.collect_audio_files import collect_files
-from av_tasks.create_directories import create_directories
+from av_tasks.audio.collect_audio_files import collect_audio_files
+
 
 default_args = {
     'owner': 'airflow',
@@ -29,13 +29,9 @@ audio_workflow = DAG(
 # Tasks
 collect_audio_files = PythonOperator(
     task_id='collect_audio_files',
-    python_callable=collect_files,
-    dag=audio_workflow)
-
-create_directories = PythonOperator(
-    task_id='create_directories',
-    python_callable=create_directories,
-    dag=audio_workflow)
+    python_callable=collect_audio_files,
+    dag=audio_workflow
+)
 
 # Flow
-collect_audio_files >> create_directories
+collect_audio_files

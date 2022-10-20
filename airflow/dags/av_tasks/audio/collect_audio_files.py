@@ -8,15 +8,16 @@ from pathlib import Path
 
 log = logging.getLogger(__name__)
 
-INPUT_DIR = os.environ.get("AV_INPUT_DIR", default='/opt/input')
-OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
-VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
-AUDIO_MASTER_FILE_EXTENSION = 'wav'
+INPUT_DIR = os.environ.get("AUDIO_INPUT_DIR", default='/opt/av_hdd/audios')
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/av_hdd/aip')
+AUDIO_FILE_LIST = os.path.join(OUTPUT_DIR, 'audiofiles.json')
+AUDIO_MASTER_FILE_EXTENSION = os.environ.get(
+    "AUDIO_MASTER_FILE_EXTENSION", default='wav')
 BARCODE_PATTERN = os.environ.get(
     'AV_BARCODE_PATTERN', default='^HU_OSA_[0-9]{8}$')
 
 
-def collect_files():
+def collect_audio_files():
     log.info("Generate output directory %s" % OUTPUT_DIR)
     pathlib.Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
@@ -33,6 +34,7 @@ def collect_files():
                   AUDIO_MASTER_FILE_EXTENSION)
         raise Exception
 
+    # XXX: this part needs refactorization
     file_name = str(path.name).strip('.%s' % AUDIO_MASTER_FILE_EXTENSION)
     if re.match(BARCODE_PATTERN, file_name):
         barcode = file_name
@@ -48,13 +50,16 @@ def collect_files():
         file_list[barcode] = str(path)
 
     if len(file_list) > 0:
-        with open(VIDEO_LIST, 'w') as outfile:
+        with open(AUDIO_FILE_LIST, 'w') as outfile:
             json.dump(file_list, outfile)
-            log.info("List of video files were created in %s" % VIDEO_LIST)
+            log.info("List of video files were created in %s" %
+                     AUDIO_FILE_LIST)
+
+    # FIXME: no need (see line 30-35)
     else:
-        log.error("No video can be found in %s" % INPUT_DIR)
+        log.error("No audio file can be found in %s" % INPUT_DIR)
         raise Exception
 
 
 if __name__ == '__main__':
-    collect_files()
+    collect_audio_files()
