@@ -5,6 +5,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from av_tasks.audio.check_barcode_existence import check_barcode
 from av_tasks.audio.collect_audio_files import collect_audio_files
+from av_tasks.audio.create_dirs import create_dirs
 
 default_args = {
     'owner': 'airflow',
@@ -41,5 +42,12 @@ check_barcode_existence = PythonOperator(
     dag=audio_workflow
 )
 
+create_dirs = PythonOperator(
+    task_id='create_directories_for_audio_preservation',
+    python_callable=create_dirs,
+    dag=audio_workflow
+)
+
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
+check_barcode_existence.set_downstream(create_dirs)
