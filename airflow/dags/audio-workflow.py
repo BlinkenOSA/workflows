@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
-from airflow.operators.python_operator import PythonOperator
+
 from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
 
-from av_tasks.audio.collect_audio_files import collect_audio_files
 from av_tasks.audio.check_barcode_existence import check_barcode
-
+from av_tasks.audio.collect_audio_files import collect_audio_files
 
 default_args = {
     'owner': 'airflow',
