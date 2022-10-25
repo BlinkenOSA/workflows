@@ -1,14 +1,16 @@
 import json
-import os
 import logging
+import os
+
 import docker
 
 log = logging.getLogger(__name__)
 
-OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/av_hdd/aip')
 VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
-ACCESS_FILE_EXTENSION = os.environ.get("AV_ACCESS_FILE_EXTENSION", default='mp4')
-WORKING_DIR = os.environ.get("AV_FINAL_DIR", default="/opt/output")
+ACCESS_FILE_EXTENSION = os.environ.get(
+    "AV_ACCESS_FILE_EXTENSION", default='mp4')
+WORKING_DIR = os.environ.get("AV_FINAL_DIR", default='/opt/av_hdd/aip')
 
 
 def create_low_quality():
@@ -21,14 +23,17 @@ def create_low_quality():
     with open(VIDEO_LIST, 'r') as video_list_file:
         video_list = json.load(video_list_file)
 
-    for barcode,path in video_list.items():
+    for barcode, path in video_list.items():
         docker_dir = '/root/data'
 
         volumes = {}
-        volumes[os.path.join(WORKING_DIR, barcode)] = {'bind': docker_dir, 'mode': 'rw'}
+        volumes[os.path.join(WORKING_DIR, barcode)] = {
+            'bind': docker_dir, 'mode': 'rw'}
 
-        input_file = os.path.join(docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
-        output_file = os.path.join(docker_dir, 'Content', 'Access', '%s-low.%s' % (barcode, ACCESS_FILE_EXTENSION))
+        input_file = os.path.join(
+            docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
+        output_file = os.path.join(
+            docker_dir, 'Content', 'Access', '%s-low.%s' % (barcode, ACCESS_FILE_EXTENSION))
 
         # Set FFMPEG params
         command = ['ffmpeg',
@@ -53,6 +58,7 @@ def create_low_quality():
             )
         except docker.errors.ContainerError as e:
             log.error(e.stderr)
+
 
 if __name__ == '__main__':
     create_low_quality()

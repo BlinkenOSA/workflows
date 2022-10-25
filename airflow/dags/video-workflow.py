@@ -20,7 +20,7 @@ from av_tasks.get_descriptive_metadata import get_descriptive_metadata
 from av_tasks.push_to_ams import push_to_ams
 
 
-INPUT_DIR = os.environ.get("AV_INPUT_DIR", default='/opt/input')
+INPUT_DIR = os.environ.get("AV_INPUT_DIR", default='/opt/av_hdd/videos')
 MASTER_FILE_EXTENSION = os.environ.get("AV_MASTER_FILE_EXTENSION")
 ACCESS_FILE_EXTENSION = os.environ.get("AV_ACCESS_FILE_EXTENSION")
 

@@ -1,21 +1,18 @@
 import json
+import logging
 import os
 
-import subprocess
-import logging
-
 import docker
-from airflow.models import Variable
 
 log = logging.getLogger(__name__)
 
 
-OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/av_hdd/aip')
 VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
-WORKING_DIR = os.environ.get("AV_FINAL_DIR", default="/opt/output")
+WORKING_DIR = os.environ.get("AV_FINAL_DIR", default='/opt/av_hdd/aip')
 
 
-def create_video_info(directory='Preservation', file_extension='mpg'):
+def create_video_info(directory='Preservation', file_extension='avi'):
     client = docker.from_env()
 
     if not os.path.exists(VIDEO_LIST):
@@ -31,16 +28,20 @@ def create_video_info(directory='Preservation', file_extension='mpg'):
         docker_dir = '/root/data'
 
         volumes = {}
-        volumes[os.path.join(WORKING_DIR, barcode)] = {'bind': docker_dir, 'mode': 'rw'}
+        volumes[os.path.join(WORKING_DIR, barcode)] = {
+            'bind': docker_dir, 'mode': 'rw'}
 
         # logging:
         log.info(WORKING_DIR)
-        log.info("Starting ffmpeg docker, mapping %s as %s" % (os.path.join(WORKING_DIR, barcode), docker_dir))
+        log.info("Starting ffmpeg docker, mapping %s as %s" %
+                 (os.path.join(WORKING_DIR, barcode), docker_dir))
 
         input_dir = os.path.join(docker_dir, 'Content', directory)
-        input_file = os.path.join(input_dir, '%s.%s' % (barcode, file_extension))
+        input_file = os.path.join(input_dir, '%s.%s' %
+                                  (barcode, file_extension))
 
-        command = ['ffprobe', '-i', input_file, '-show_format', '-show_streams', '-print_format', 'json']
+        command = ['ffprobe', '-i', input_file, '-show_format',
+                   '-show_streams', '-print_format', 'json']
 
         # Run ffmpeg in docker container
         output = client.containers.run(

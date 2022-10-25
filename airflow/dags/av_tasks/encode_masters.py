@@ -1,15 +1,18 @@
 import json
-import os
 import logging
+import os
+
 import docker
 
 log = logging.getLogger(__name__)
 
-OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/output')
+OUTPUT_DIR = os.environ.get("AV_OUTPUT_DIR", default='/opt/av_hdd/aip')
 VIDEO_LIST = os.path.join(OUTPUT_DIR, 'videofiles.json')
-MASTER_FILE_EXTENSION = os.environ.get("AV_MASTER_FILE_EXTENSION", default='mpg')
-ACCESS_FILE_EXTENSION = os.environ.get("AV_ACCESS_FILE_EXTENSION", default='mp4')
-WORKING_DIR = os.environ.get("AV_FINAL_DIR", default="/opt/output")
+MASTER_FILE_EXTENSION = os.environ.get(
+    "AV_MASTER_FILE_EXTENSION", default='avi')
+ACCESS_FILE_EXTENSION = os.environ.get(
+    "AV_ACCESS_FILE_EXTENSION", default='mp4')
+WORKING_DIR = os.environ.get("AV_FINAL_DIR", default='/opt/av_hdd/aip')
 
 
 def encode_masters(on_success=None, on_error=None):
@@ -26,10 +29,13 @@ def encode_masters(on_success=None, on_error=None):
         docker_dir = '/root/data'
 
         volumes = {}
-        volumes[os.path.join(WORKING_DIR, barcode)] = {'bind': docker_dir, 'mode': 'rw'}
+        volumes[os.path.join(WORKING_DIR, barcode)] = {
+            'bind': docker_dir, 'mode': 'rw'}
 
-        input_file = os.path.join(docker_dir, 'Content', 'Preservation', '%s.%s' % (barcode, MASTER_FILE_EXTENSION))
-        output_file = os.path.join(docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
+        input_file = os.path.join(docker_dir, 'Content', 'Preservation', '%s.%s' % (
+            barcode, MASTER_FILE_EXTENSION))
+        output_file = os.path.join(
+            docker_dir, 'Content', 'Access', '%s.%s' % (barcode, ACCESS_FILE_EXTENSION))
 
         # Set FFMPEG params
         command = ['ffmpeg',
@@ -55,6 +61,7 @@ def encode_masters(on_success=None, on_error=None):
         except docker.errors.ContainerError as e:
             log.error(e.stderr)
             return on_error
+
 
 if __name__ == '__main__':
     encode_masters()
