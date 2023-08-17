@@ -6,6 +6,7 @@ from airflow.operators.python_operator import PythonOperator
 from av_tasks.audio.check_barcode_existence import check_barcode
 from av_tasks.audio.collect_audio_files import collect_audio_files
 from av_tasks.audio.create_dirs import create_dirs
+from av_tasks.audio.copy_audio_masters import copy_audio_master_files
 
 default_args = {
     'owner': 'airflow',
@@ -48,6 +49,13 @@ create_dirs = PythonOperator(
     dag=audio_workflow
 )
 
+copy_audio_masters = PythonOperator(
+    task_id='copy_audio_master_files_to_directory',
+    python_callable=copy_audio_master_files,
+    dag=audio_workflow
+)
+
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
 check_barcode_existence.set_downstream(create_dirs)
+create_dirs.set_downstream(copy_audio_masters)
