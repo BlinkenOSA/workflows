@@ -7,11 +7,12 @@ from av_tasks.audio.check_barcode_existence import check_barcode
 from av_tasks.audio.collect_audio_files import collect_audio_files
 from av_tasks.audio.create_dirs import create_dirs
 from av_tasks.audio.copy_audio_masters import copy_audio_master_files
+from av_tasks.audio.create_audio_checksum import create_checksum
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2022, 1, 1),
+    'start_date': datetime(2023, 1, 1),
     'email': ['bonej@ceu.edu', 'danij@ceu.edu', 'krolikowskid@ceu.edu'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -55,7 +56,14 @@ copy_audio_masters = PythonOperator(
     dag=audio_workflow
 )
 
+create_checksum_from_audio_master = PythonOperator(
+    task_id='create_checksum_from_audio_master_file',
+    python_callable=create_checksum,
+    dag=audio_workflow
+)
+
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
 check_barcode_existence.set_downstream(create_dirs)
 create_dirs.set_downstream(copy_audio_masters)
+copy_audio_masters.set_downstream(create_checksum_from_audio_master)
