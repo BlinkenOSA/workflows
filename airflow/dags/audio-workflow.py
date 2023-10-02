@@ -8,6 +8,7 @@ from av_tasks.audio.collect_audio_files import collect_audio_files
 from av_tasks.audio.create_dirs import create_dirs
 from av_tasks.audio.copy_audio_masters import copy_audio_master_files
 from av_tasks.audio.create_audio_checksum import create_checksum
+from av_tasks.audio.save_audio_technical_metadata import save_audio_tech_md
 
 default_args = {
     'owner': 'airflow',
@@ -62,8 +63,16 @@ create_checksum_from_audio_master = PythonOperator(
     dag=audio_workflow
 )
 
+save_audio_technical_metadata_from_audio_master = PythonOperator(
+    task_id='save_audio_technical_metadata_from_audio_master_file',
+    python_callable=save_audio_tech_md,
+    dag=audio_workflow
+)
+
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
 check_barcode_existence.set_downstream(create_dirs)
 create_dirs.set_downstream(copy_audio_masters)
 copy_audio_masters.set_downstream(create_checksum_from_audio_master)
+create_checksum_from_audio_master.set_downstream(
+    save_audio_technical_metadata_from_audio_master)
