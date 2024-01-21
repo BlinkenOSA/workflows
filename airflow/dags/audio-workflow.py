@@ -11,6 +11,7 @@ from av_tasks.audio.create_audio_checksum import create_checksum
 from av_tasks.audio.save_audio_technical_metadata import save_audio_tech_md
 from av_tasks.audio.get_descriptive_metadata_from_AMS import get_descriptive_metadata
 from av_tasks.audio.put_technical_metadata_to_AMS import put_techmd_to_ams
+from av_tasks.audio.transcode_audio_masters import transcode_audio
 
 default_args = {
     'owner': 'airflow',
@@ -83,6 +84,12 @@ put_technical_metadata_to_AMS_from_audio = PythonOperator(
     dag=audio_workflow
 )
 
+transcode_audio_master = PythonOperator(
+    task_id='transcode_audio_master_file',
+    python_callable=transcode_audio,
+    dag=audio_workflow
+)
+
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
 check_barcode_existence.set_downstream(create_dirs)
@@ -91,3 +98,4 @@ copy_audio_masters.set_downstream(create_checksum_from_audio_master)
 create_checksum_from_audio_master.set_downstream(save_audio_technical_metadata_from_audio_master)
 save_audio_technical_metadata_from_audio_master.set_downstream(get_descriptive_metadata_from_AMS_about_audio)
 get_descriptive_metadata_from_AMS_about_audio.set_downstream(put_technical_metadata_to_AMS_from_audio)
+put_technical_metadata_to_AMS_from_audio.set_downstream(transcode_audio_master)
