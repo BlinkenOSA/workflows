@@ -12,6 +12,7 @@ from av_tasks.audio.save_audio_technical_metadata import save_audio_tech_md
 from av_tasks.audio.get_descriptive_metadata_from_AMS import get_descriptive_metadata
 from av_tasks.audio.put_technical_metadata_to_AMS import put_techmd_to_ams
 from av_tasks.audio.transcode_audio_masters import transcode_audio
+from av_tasks.audio.send_audio_info_mail import send_AIP_info
 
 default_args = {
     'owner': 'airflow',
@@ -90,6 +91,12 @@ transcode_audio_master = PythonOperator(
     dag=audio_workflow
 )
 
+send_AIP_info_mail = PythonOperator(
+    task_id='sending_aip_info_email',
+    python_callable=send_AIP_info,
+    dag=audio_workflow
+)
+
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
 check_barcode_existence.set_downstream(create_dirs)
@@ -99,3 +106,4 @@ create_checksum_from_audio_master.set_downstream(save_audio_technical_metadata_f
 save_audio_technical_metadata_from_audio_master.set_downstream(get_descriptive_metadata_from_AMS_about_audio)
 get_descriptive_metadata_from_AMS_about_audio.set_downstream(put_technical_metadata_to_AMS_from_audio)
 put_technical_metadata_to_AMS_from_audio.set_downstream(transcode_audio_master)
+transcode_audio_master.set_downstream(send_AIP_info_mail)
