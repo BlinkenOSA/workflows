@@ -1,7 +1,9 @@
+import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.dagrun_operator import TriggerDagRunOperator
 
 from av_tasks.audio.check_barcode_existence import check_barcode
 from av_tasks.audio.collect_audio_files import collect_audio_files
@@ -13,6 +15,8 @@ from av_tasks.audio.get_descriptive_metadata_from_AMS import get_descriptive_met
 from av_tasks.audio.put_technical_metadata_to_AMS import put_techmd_to_ams
 from av_tasks.audio.transcode_audio_masters import transcode_audio
 from av_tasks.audio.send_audio_info_mail import send_AIP_info
+
+INPUT_DIR = os.environ.get("AUDIO_INPUT_DIR", default='/opt/av_hdd/audios')
 
 default_args = {
     'owner': 'airflow',
@@ -94,8 +98,23 @@ transcode_audio_master = PythonOperator(
 send_AIP_info_mail = PythonOperator(
     task_id='sending_aip_info_email',
     python_callable=send_AIP_info,
-    dag=audio_workflow
+    dag=audio_workflow,
+    trigger_rule='one_success'
 )
+
+
+def triggering_dag(context, dag_run_obj):
+    if any(os.listdir(INPUT_DIR)):
+        return dag_run_obj
+    else:
+        return None
+
+
+retrigger_dag = TriggerDagRunOperator(
+    task_id='rerun_DAG',
+    trigger_dag_id='audio-workflow',
+    python_callable=triggering_dag,
+    dag=audio_workflow)
 
 # Flow
 collect_audio_files.set_downstream(check_barcode_existence)
@@ -107,3 +126,4 @@ save_audio_technical_metadata_from_audio_master.set_downstream(get_descriptive_m
 get_descriptive_metadata_from_AMS_about_audio.set_downstream(put_technical_metadata_to_AMS_from_audio)
 put_technical_metadata_to_AMS_from_audio.set_downstream(transcode_audio_master)
 transcode_audio_master.set_downstream(send_AIP_info_mail)
+send_AIP_info_mail.set_downstream(retrigger_dag)

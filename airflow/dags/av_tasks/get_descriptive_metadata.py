@@ -3,7 +3,6 @@ import os
 import requests
 import logging
 
-from airflow.models import Variable
 
 log = logging.getLogger(__name__)
 
